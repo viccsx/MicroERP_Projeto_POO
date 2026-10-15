@@ -1,0 +1,619 @@
+from abc import ABC, abstractmethod
+
+#valida qualquer reposta que contenha vírgulas, para que o programa possa rodar
+def ler_numero(mensagem):
+    while True:
+        numero = input(mensagem).strip().replace(',', '.')
+        partes = numero.split('.')
+
+        if len(partes) <= 2 and all(parte.isdigit() for parte in partes) and all(partes):
+            return float(numero)
+
+        print("Resposta inválida! Digite um número correto.")
+
+#criar classe empresa
+class Empresa:
+    def __init__(self, nome, cnpj, tel):
+        self.__nome = nome
+        self.__cnpj = cnpj
+        self.__tel = tel
+        self.__produto = []
+        self.__cliente = []
+
+    @property
+    def nome(self):
+        return self.__nome
+
+    @property
+    def cnpj(self):
+        return self.__cnpj
+
+    @property
+    def tel(self):
+        return self.__tel
+
+    @property
+    def produtos(self):
+        return self.__produto
+
+    @property
+    def clientes(self):
+        return self.__cliente
+
+    @nome.setter
+    def nome(self, n):
+        self.__nome = n
+
+    @cnpj.setter
+    def cnpj(self, c):
+        self.__cnpj = c
+
+    @tel.setter
+    def tel(self, t):
+        self.__tel = t
+
+#listas pra controlar produtos e clientes
+    def ad_produto(self, produto):
+        self.__produto.append(produto)
+
+    def ad_cliente(self, cliente):
+        self.__cliente.append(cliente)
+
+    def __repr__(self):
+        return f'Empresa: {self.__nome}. CNPJ: {self.__cnpj}. Telefone: {self.__tel} .' 
+
+
+#Questão 01, classe produto
+class Produto:
+    def __init__(self, n, pc, pv, qtd_e):
+        self.__nome = n
+        self.__p_de_custo = pc
+        self.__p_de_venda = pv
+        self.__qtd_em_estoque = qtd_e
+
+    #geters e setters
+    @property
+    def nome(self):
+        return self.__nome
+
+    @property
+    def p_de_custo(self):
+        return self.__p_de_custo
+
+    @property
+    def p_de_venda(self):
+        return self.__p_de_venda
+
+    @property
+    def qtd_em_estoque(self):
+        return self.__qtd_em_estoque
+
+    @nome.setter
+    def nome(self, no):
+        self.__nome = no
+
+    @p_de_custo.setter
+    def p_de_custo(self, p):
+        self.__p_de_custo = p
+
+    @p_de_venda.setter
+    def p_de_venda(self, v):
+        self.__p_de_venda = v
+
+    @qtd_em_estoque.setter
+    def qtd_em_estoque(self, es):
+        self.__qtd_em_estoque = es
+
+    #Parte do relatório de produtos
+    def __repr__(self):
+        return f'Produto: {self.__nome}, Preço de Custo: R${self.__p_de_custo:.2f}, Preço de Venda: R${self.__p_de_venda:.2f}, Quantidade em Estoque: {self.__qtd_em_estoque}'
+
+
+#criando classe Cliente
+class Cliente:
+    def __init__(self, n, cpf, tel):
+        self.__nome = n
+        self.__cpf = cpf
+        self.__telefone = tel
+        self.__saldo_devedor = 0
+
+    #getters e setters
+    @property
+    def nome(self):
+        return self.__nome
+
+    @property
+    def cpf(self):
+        return self.__cpf
+
+    @property
+    def telefone(self):
+        return self.__telefone
+
+    @property
+    def saldo_devedor(self):
+     return self.__saldo_devedor
+
+    @nome.setter
+    def nome(self, no):
+        self.__nome = no
+
+    @cpf.setter
+    def cpf(self, c):
+        self.__cpf = c
+
+    @telefone.setter
+    def telefone(self, t):
+        self.__telefone = t
+
+    @saldo_devedor.setter
+    def saldo_devedor(self, sd):
+     self.__saldo_devedor = sd
+
+    def adicionar_divida(self, valor):
+     self.__saldo_devedor += valor
+
+    #Parte do relatório de clientes
+    def __repr__(self):
+        return f'Cliente: {self.__nome}, CPF: {self.__cpf}, Telefone: {self.__telefone}'
+
+
+#listas pra controlar produtos e clientes
+lista_de_produtos = []
+lista_de_clientes = []
+
+#cadastar empresa
+print('\nCadastro da Empresa')
+
+nome_valido = False
+while nome_valido == False:
+
+    nome_empresa = input('Nome da empresa: ')
+
+    #verificação para não cadastrar empresas que não contenham nome
+    if nome_empresa == '':
+        print('O nome não pode ficar vazio. Digite novamente.')
+    else:
+        nome_valido = True
+
+
+cnpj_valido = False
+while cnpj_valido == False:
+
+    cnpj_empresa = input('CNPJ: ')
+    cnpj_empresa = cnpj_empresa.replace('.', '').replace('/', '').replace('-', '')
+
+    if not cnpj_empresa.isdigit():
+        print('O CNPJ deve conter apenas números. Digite novamente.')
+    elif len(cnpj_empresa) != 14:
+        print('O CNPJ deve possuir exatamente 14 números. Digite novamente.')
+    else:
+        cnpj_valido = True
+
+
+tel_valido = False
+while tel_valido == False:
+
+    tel_empresa = input('Digite o telefone da empresa: ')
+    tel_empresa = tel_empresa.replace('(', '').replace(')', '').replace('-', '').replace(' ', '')
+
+    if not tel_empresa.isdigit():
+        print('O telefone deve conter apenas números. Digite novamente.')
+    elif len(tel_empresa) != 11:
+        print('O telefone deve possuir 11 números. Digite novamente.')
+    else:
+        tel_valido = True
+
+
+#criar empresa
+e = Empresa(nome_empresa, cnpj_empresa, tel_empresa)
+
+print('Empresa cadastrada com sucesso!')
+print(e)
+
+
+#classe vendas
+class Vendas:
+  def __init__(self,produto,quantidade,valor_de_venda,cliente,forma_de_pagamento,lucro):
+    self.__produto=produto
+    self.__quantidade=quantidade
+    self.__valor_de_venda=valor_de_venda
+    self.__cliente=cliente
+    self.__forma_de_pagamento=forma_de_pagamento
+    self.__lucro=lucro
+
+  @property
+  def produto(self):
+    return self.__produto
+
+  @property
+  def quantidade (self):
+    return self.__quantidade
+
+  @property
+  def valor_de_venda(self):
+    return  self.__valor_de_venda
+
+  @property
+  def cliente (self):
+    return self.__cliente
+
+  @property
+  def forma_de_pagamento(self):
+    return self.__forma_de_pagamento
+
+  @property
+  def lucro(self):
+    return self.__lucro
+
+  @produto.setter
+  def produto (self,p):
+    self.__produto=p
+
+  @quantidade.setter
+  def quantidade(self,q):
+    self.__quantidade=q
+
+  @valor_de_venda.setter
+  def valor_de_venda (self,v):
+    self.__valor_de_venda=v
+
+  @cliente.setter
+  def cliente(self,c):
+    self.__cliente=c
+
+  @forma_de_pagamento.setter
+  def forma_de_pagamento(self,f):
+    self.__forma_de_pagamento=f
+
+  def __repr__ (self):
+    return f"Produto: {self.produto.nome}, quantidade: {self.quantidade}, valor de venda: {self.valor_de_venda}, cliente: {self.cliente}, forma de pagamento: {self.forma_de_pagamento}, lucro: {self.lucro}."
+
+
+#criar formas de pagamento
+class FormaPagamento(ABC):
+ @abstractmethod
+ def processar_pagamento(self, valor):
+  ...
+
+class Pix(FormaPagamento):
+ def processar_pagamento(self, valor):
+  print(f'O pagamento de R${valor:.2f} foi realizado via Pix.')
+  return True
+
+class Especie(FormaPagamento):
+  #verifica se o usuário digitar um valor insuficiente
+    def processar_pagamento(self, valor):
+      v = 0
+
+      while v < valor:
+          v = ler_numero('Digite o valor pago pelo cliente: ')
+
+          if v < valor:
+              print('Valor insuficiente. Digite o valor novamente.')
+
+      troco = v - valor
+      print(f'Valor Pago, troco: R${troco:.2f}')
+      return True
+
+class Fiado(FormaPagamento):
+ def processar_pagamento(self, valor, empresa):
+    while True:
+        nome = input('Digite o nome do cliente: ')
+        cliente_encontrado = None
+
+        for c in empresa.clientes:
+            if c.nome.lower() == nome.lower():
+                cliente_encontrado = c
+                break
+
+        if cliente_encontrado is not None:
+            cliente_encontrado.adicionar_divida(valor)
+            self.cliente_encontrado = cliente_encontrado
+            print(f'Venda de R${valor:.2f} registrada no saldo devedor do cliente.')
+            return True
+
+        print('Cliente não encontrado. Digite novamente.')
+
+
+#lista pra armazenar vendas
+# Adiciona o cliente à lista da empresa para permitir a busca no pagamento fiado.
+lista_de_vendas=[]
+# Q20 - primeiro menu do sistema
+
+opcao = ''
+
+while opcao != False:
+
+    print('\n==============================')
+    print('       MENU DO SISTEMA')
+    print('==============================')
+    print('1 - Cadastrar produtos')
+    print('2 - Cadastrar clientes')
+    print('3 - Mostrar empresa')
+    print('4 - Relatório dos produtos')
+    print('5 - Relatório dos clientes')
+    print('6 - Registrar venda')
+    print('7 - Relatório das vendas')
+    print('8 - Sair')
+    print('==============================')
+
+    opcao = input('Digite uma opção: ')
+
+    if opcao == "1":
+
+        #Permitir que o usuário cadastre produtos
+        print('Cadastro de Produtos ')
+
+        qp = input('Digite a quantidade de produtos que você deseja cadastrar: ')
+
+        while not qp.isdigit():
+          print('Erro! Você não digitou um valor válido. Tente novamente.')
+          qp = input('Digite a quantidade de produtos que você deseja cadastrar: ')
+
+        qp = int(qp)
+
+
+        for i in range(qp):
+
+            np = input('Digite o nome do produto: ')
+            #chama-se a função para evitar que o programa quebre por causa de números decimais digitados com vírgula
+            pr_cus = ler_numero('Digite o preço de custo do produto: ')
+
+            #Pergunta ao usuário se ele sabe o preço de venda
+            #Caso não saiba, programa irá calcular
+            #Enquanto a resposta não for válida, a pergunta será repetida.
+
+            resposta_valida = False
+
+            while resposta_valida == False:
+
+                preco_venda = input("Você já sabe qual valor cobrar no seu produto? Sim(s)/Não(n):").lower()
+
+                if preco_venda == "s":
+                    # Caso o usuário já saiba o preço, ele informa o valor manualmente.
+                    pr_ven = ler_numero("Digite o preço de venda: ")
+                    resposta_valida = True
+
+                elif preco_venda == "n":
+                    print("""
+Para ajudar na escolha da sua margem:
+
+• 20% a 30% → margem mais conservadora, podendo ser usada
+  quando o produto possui bastante concorrência.
+
+• 40% a 50% → uma margem intermediária, que pode ser considerada
+  como ponto de partida para muitos produtos.
+
+• Acima de 50% → margem maior, que pode ser adequada dependendo
+  dos custos, do público e do mercado.
+
+Esses valores são apenas referências. Analise seus custos e o
+mercado antes de definir sua margem.
+""")
+
+                    margem = input("Qual margem de lucro você deseja? (%): ").replace('%', '')
+                    while not margem.isdigit():
+                      print('Erro! Você não digitou um valor válido. Tente novamente.')
+                      margem = input("Qual margem de lucro você deseja? (%): ").replace('%', '')
+
+                    margem = int(margem)
+
+                    # Verifica se a margem informada é válida.
+                    if margem >= 0 and margem < 100:
+                        pr_ven = pr_cus / (1 - (margem / 100))
+                        print(f"Preço de venda sugerido: R$ {pr_ven:.2f}")
+                        resposta_valida = True
+                    else:
+                        print("Margem inválida. Digite uma margem maior ou igual a 0% e menor que 100%.")
+
+                else:
+                    print("Opção inválida. Digite apenas s para Sim ou n para Não.")
+
+            qtd_pro = input('Digite a quantidade de produtos em estoque: ')
+            while not qtd_pro.isdigit():
+              print('Erro! Você não digitou um valor válido. Tente novamente.')
+              qtd_pro = input('Digite a quantidade de produtos em estoque: ')
+
+            qtd_pro = int(qtd_pro)
+
+            produto = Produto(np, pr_cus, pr_ven, qtd_pro)
+
+            #Verifica se o produto já foi cadastrado
+            produto_repetido = False
+
+            for p in lista_de_produtos:
+                if p.nome.lower() == np.lower():
+                    p.qtd_em_estoque = p.qtd_em_estoque + qtd_pro
+                    produto_repetido = True
+                    print('Produto já cadastrado. Quantidade adicionada ao estoque.')
+
+            if produto_repetido == False:
+                print('Produto Criado!')
+                lista_de_produtos.append(produto)
+
+            print(' ')
+
+    elif opcao == "2":
+        #Permitir que o usuário cadastre clientes
+        print('Cadastro de Clientes ')
+
+        qc = input('Digite a quantidade de clientes que você deseja cadastrar: ')
+        while not qc.isdigit():
+          print('Erro! Você não digitou um valor válido. Tente novamente.')
+          qc = input('Digite a quantidade de clientes que você deseja cadastrar: ')
+
+        qc = int(qc)
+
+        for i in range(qc):
+
+            #verificação do cpf e telefone
+            nc = input('Digite o nome do cliente: ')
+
+            cpf = input('Digite o CPF do cliente: ')
+            cpf = cpf.replace('.', '').replace('-', '').replace(' ', '')
+
+            while not cpf.isdigit() or len(cpf) != 11 or cpf == cpf[0] * 11:
+                print('CPF inválido! Digite um CPF com 11 números.')
+                cpf = input('Digite o CPF do cliente: ')
+                cpf = cpf.replace('.', '').replace('-', '').replace(' ', '')
+
+            tel = input('Digite o telefone do cliente: ')
+            tel = tel.replace('(', '').replace(')', '').replace('-', '').replace(' ', '')
+
+            while not tel.isdigit() or len(tel) != 11:
+                print('Telefone inválido! Digite o telefone com DDD e 11 números.')
+                tel = input('Digite o telefone do cliente: ')
+                tel = tel.replace('(', '').replace(')', '').replace('-', '').replace(' ', '')
+
+            cliente = Cliente(nc, cpf, tel)
+            print('Cliente cadastrado!')
+
+            lista_de_clientes.append(cliente)
+            e.ad_cliente(cliente)
+            print(' ')
+
+    #relatorio de empresa
+    elif opcao == "3":
+        print(e)
+
+    #relatorio produtos
+    elif opcao == "4":
+        print('Produtos cadastrados: ')
+        for p in lista_de_produtos:
+            print(p)
+            print(' ')
+
+    #relatorio clientes
+    elif opcao == "5":
+        print('Clientes Cadastrados: ')
+        for cliente in lista_de_clientes:
+            print(cliente)
+
+
+    # Q41 - registrar vendas pelo menu
+    elif opcao == "6":
+
+        if len(lista_de_produtos) == 0:
+            print("Cadastre um produto antes de realizar uma venda.")
+
+        else:
+            # Q42 - integrar vendas com produtos e estoque
+            produto_escolhido = None
+
+           #enquanto produto escolhido for vazio, continue
+            while produto_escolhido is None:
+                nome_produto = input("Digite o nome do produto que deseja vender: ")
+
+                for p in lista_de_produtos:
+                    if p.nome.lower() == nome_produto.lower():
+                        produto_escolhido = p
+                        break #sai imediatamente caso o produto esteja na lista
+
+                if produto_escolhido is None:
+                    print("Produto não encontrado. Digite novamente.")
+
+            quantidade_valida = False
+
+            while not quantidade_valida:
+                quantidade = input("Digite a quantidade que deseja vender: ")
+
+                if not quantidade.isdigit():
+                    print("Erro! Digite uma quantidade inteira válida.")
+
+                elif int(quantidade) <= 0:
+                    print("A quantidade deve ser maior que zero.")
+
+                elif int(quantidade) > produto_escolhido.qtd_em_estoque:
+                    print("Estoque insuficiente.")
+                    print(f"Estoque disponível: {produto_escolhido.qtd_em_estoque}")
+
+                else:
+                    quantidade = int(quantidade)
+                    quantidade_valida = True
+
+            # Q43 - calcular valores e realizar o pagamento
+            valor_total = produto_escolhido.p_de_venda * quantidade
+            custo_total = produto_escolhido.p_de_custo * quantidade
+            lucro = valor_total - custo_total
+
+            print(f"Valor total da venda: R${valor_total:.2f}")
+            print(f"Lucro da venda: R${lucro:.2f}")
+
+            if lucro < 0:
+                print("ALERTA: Você está no prejuízo!")
+            elif lucro == 0:
+                print("AVISO: Você não está recebendo lucro.")
+            else:
+                print("Você está recebendo lucro.")
+
+            # Escolher forma de pagamento
+            print("\nFormas de Pagamento:")
+            print("1 - Pix")
+            print("2 - Espécie")
+            print("3 - Fiado")
+
+            forma = input("Qual é a forma de pagamento? ")
+
+            while forma not in ["1", "2", "3"]:
+                print("Forma de pagamento inválida. Digite 1, 2 ou 3.")
+                forma = input("Qual é a forma de pagamento? ")
+
+            paga_realizado = False
+            forma_paga = ""
+            cliente_venda = "Não informado."
+
+            if forma == "1":
+                p = Pix()
+                paga_realizado = p.processar_pagamento(valor_total)
+                forma_paga = "Pix"
+
+            elif forma == "2":
+                p = Especie()
+                paga_realizado = p.processar_pagamento(valor_total)
+                forma_paga = "Espécie"
+
+            elif forma == "3":
+                p = Fiado()
+                paga_realizado = p.processar_pagamento(valor_total, e)
+                forma_paga = "Fiado"
+
+                if paga_realizado:
+                    cliente_venda = p.cliente_encontrado.nome
+
+            # Registrar venda somente se o pagamento for confirmado
+            if paga_realizado:
+                produto_escolhido.qtd_em_estoque -= quantidade
+
+                v = Vendas(
+                    produto_escolhido,
+                    quantidade,
+                    valor_total,
+                    cliente_venda,
+                    forma_paga,
+                    lucro)
+
+                lista_de_vendas.append(v)
+                print("Venda registrada com sucesso!")
+
+            else:
+                print("Pagamento não confirmado. Venda não realizada.")
+
+    # Q44 - relatório das vendas
+    elif opcao == "7":
+        print("Vendas realizadas:")
+
+        if len(lista_de_vendas) == 0:
+            print("Nenhuma venda foi realizada.")
+        else:
+            for v in lista_de_vendas:
+                print(v)
+
+    # Sair do sistema
+    elif opcao == "8":
+        print("Você saiu do menu da empresa!")
+        opcao = False
+
+    #teste para sair
+    else:
+        print("Digite um número válido.")
