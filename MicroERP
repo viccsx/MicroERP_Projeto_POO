@@ -63,7 +63,7 @@ class Empresa:
         return f'Empresa: {self.__nome}. CNPJ: {self.__cnpj}. Telefone: {self.__tel} .' 
 
 
-#Questão 01, classe produto
+#criar classe produto
 class Produto:
     def __init__(self, n, pc, pv, qtd_e):
         self.__nome = n
@@ -71,7 +71,6 @@ class Produto:
         self.__p_de_venda = pv
         self.__qtd_em_estoque = qtd_e
 
-    #geters e setters
     @property
     def nome(self):
         return self.__nome
@@ -117,7 +116,6 @@ class Cliente:
         self.__telefone = tel
         self.__saldo_devedor = 0
 
-    #getters e setters
     @property
     def nome(self):
         return self.__nome
@@ -317,9 +315,9 @@ class Fiado(FormaPagamento):
 
 
 #lista pra armazenar vendas
-# Adiciona o cliente à lista da empresa para permitir a busca no pagamento fiado.
+#adiciona o cliente à lista da empresa para permitir a busca no pagamento fiado.
 lista_de_vendas=[]
-# Q20 - primeiro menu do sistema
+#primeiro menu do sistema
 
 opcao = ''
 
@@ -362,7 +360,7 @@ while opcao != False:
 
             #Pergunta ao usuário se ele sabe o preço de venda
             #Caso não saiba, programa irá calcular
-            #Enquanto a resposta não for válida, a pergunta será repetida.
+            #Enquanto a resposta não for válida, a pergunta será repetida
 
             resposta_valida = False
 
@@ -371,7 +369,7 @@ while opcao != False:
                 preco_venda = input("Você já sabe qual valor cobrar no seu produto? Sim(s)/Não(n):").lower()
 
                 if preco_venda == "s":
-                    # Caso o usuário já saiba o preço, ele informa o valor manualmente.
+                    #caso o usuário já saiba o preço, ele informa o valor manualmente
                     pr_ven = ler_numero("Digite o preço de venda: ")
                     resposta_valida = True
 
@@ -399,7 +397,7 @@ mercado antes de definir sua margem.
 
                     margem = int(margem)
 
-                    # Verifica se a margem informada é válida.
+                    #verifica se a margem informada é válida
                     if margem >= 0 and margem < 100:
                         pr_ven = pr_cus / (1 - (margem / 100))
                         print(f"Preço de venda sugerido: R$ {pr_ven:.2f}")
@@ -419,7 +417,7 @@ mercado antes de definir sua margem.
 
             produto = Produto(np, pr_cus, pr_ven, qtd_pro)
 
-            #Verifica se o produto já foi cadastrado
+            #verifica se o produto já foi cadastrado
             produto_repetido = False
 
             for p in lista_de_produtos:
@@ -435,7 +433,7 @@ mercado antes de definir sua margem.
             print(' ')
 
     elif opcao == "2":
-        #Permitir que o usuário cadastre clientes
+        #permitir que o usuário cadastre clientes
         print('Cadastro de Clientes ')
 
         qc = input('Digite a quantidade de clientes que você deseja cadastrar: ')
@@ -491,14 +489,14 @@ mercado antes de definir sua margem.
             print(cliente)
 
 
-    # Q41 - registrar vendas pelo menu
+    #registrar vendas pelo menu
     elif opcao == "6":
 
         if len(lista_de_produtos) == 0:
             print("Cadastre um produto antes de realizar uma venda.")
 
         else:
-            # Q42 - integrar vendas com produtos e estoque
+            #integrar vendas com produtos e estoque
             produto_escolhido = None
 
            #enquanto produto escolhido for vazio, continue
@@ -532,7 +530,7 @@ mercado antes de definir sua margem.
                     quantidade = int(quantidade)
                     quantidade_valida = True
 
-            # Q43 - calcular valores e realizar o pagamento
+            #calcular valores e realizar o pagamento
             valor_total = produto_escolhido.p_de_venda * quantidade
             custo_total = produto_escolhido.p_de_custo * quantidade
             lucro = valor_total - custo_total
@@ -547,7 +545,7 @@ mercado antes de definir sua margem.
             else:
                 print("Você está recebendo lucro.")
 
-            # Escolher forma de pagamento
+            #escolher forma de pagamento
             print("\nFormas de Pagamento:")
             print("1 - Pix")
             print("2 - Espécie")
@@ -599,7 +597,7 @@ mercado antes de definir sua margem.
             else:
                 print("Pagamento não confirmado. Venda não realizada.")
 
-    # Q44 - relatório das vendas
+    #relatório das vendas
     elif opcao == "7":
         print("Vendas realizadas:")
 
@@ -609,7 +607,7 @@ mercado antes de definir sua margem.
             for v in lista_de_vendas:
                 print(v)
 
-    # Sair do sistema
+    #sair do sistema
     elif opcao == "8":
         print("Você saiu do menu da empresa!")
         opcao = False
